@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:users_posts_project/class/post_repository.dart';
 import 'package:users_posts_project/model/post/post_comments.dart';
+import 'package:users_posts_project/widgets/table_widget.dart';
 
 class PostInfoScreen extends StatefulWidget {
   PostInfoScreen({required this.postId});
@@ -11,6 +12,8 @@ class PostInfoScreen extends StatefulWidget {
 }
 
 class _PostInfoScreenState extends State<PostInfoScreen> {
+  double get _deviceSizeWidth => MediaQuery.of(context).size.width;
+
   int? get _postId => widget.postId;
 
   late List<Comments> comments;
@@ -39,7 +42,11 @@ class _PostInfoScreenState extends State<PostInfoScreen> {
         body: SingleChildScrollView(
           child: Column(children: [
             for (int i = 0; i < comments.length; i++)
-              Text("${comments[i].body}"),
+              TableWidget(
+                text1: "${i + 1}",
+                text2: "${comments[i].body}",
+                sizeWidth: _deviceSizeWidth / 5,
+              ),
           ]),
         ));
   }

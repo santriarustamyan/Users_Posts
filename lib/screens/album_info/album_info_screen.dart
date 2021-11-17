@@ -10,6 +10,7 @@ class AlbumInfoScreen extends StatefulWidget {
 }
 
 class _AlbumInfoScreenState extends State<AlbumInfoScreen> {
+  double get _deviceSizeHeight => MediaQuery.of(context).size.height;
   int? get _albumId => widget.albumId;
 
   late List<Photo> photos;
@@ -33,11 +34,18 @@ class _AlbumInfoScreenState extends State<AlbumInfoScreen> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-          child: Column(children: [
-            for (int i = 0; i < photos.length; i++)
-              Image.network("${photos[i].url}"),
-          ]),
-        ));
+            child: Container(
+          height: _deviceSizeHeight,
+          child: GridView.count(
+              scrollDirection: Axis.vertical,
+              crossAxisCount: 2,
+              children: [
+                for (int i = 0; i < photos.length; i++)
+                  Card(
+                    child: Image.network("${photos[i].url}"),
+                  ),
+              ]),
+        )));
   }
 
   Future<void> getPhotos() async {

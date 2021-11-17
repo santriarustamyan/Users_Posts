@@ -11,7 +11,7 @@ class AllUserScreen extends StatefulWidget {
 }
 
 class _AllUserScreenState extends State<AllUserScreen> {
-  // double get _deviceSize => MediaQuery.of(context).size.width;
+  double get _deviceSizeWidth => MediaQuery.of(context).size.width;
 
   late List<UserInfo> _users;
 
@@ -53,24 +53,17 @@ class _AllUserScreenState extends State<AllUserScreen> {
     return Scaffold(
         body: SafeArea(
       child: Stack(children: [
-        SingleChildScrollView(
+        Padding(
           padding: const EdgeInsets.only(
-            top: 80,
-            bottom: 40,
+            top: 30,
+            bottom: 10,
           ),
-          child: Column(
+          child: Stack(
             children: [
-              Row(children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        alignment: Alignment.center, child: Text("NAME"))),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        alignment: Alignment.center, child: Text("USERNAME"))),
-              ]),
-              for (var i = 0; i < _users.length; i++) _viewUserButton(i),
+              SingleChildScrollView(
+                child: _viewUserButton(),
+              ),
+              _viewTitle(),
             ],
           ),
         ),
@@ -78,37 +71,63 @@ class _AllUserScreenState extends State<AllUserScreen> {
     ));
   }
 
-  Widget _viewUserButton(i) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-              alignment: Alignment.center,
-              child: TextButton(
-                child: Text(" ${_users[i].name}"),
-                onPressed: () async {
-                  _viewUserAction(_users[i]);
-                },
-              )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              alignment: Alignment.center,
-              child: TextButton(
-                child: Text("${_users[i].username}"),
-                onPressed: () async {
-                  _viewUserAction(_users[i]);
-                },
-              )),
-        )
-      ],
-    );
+  Widget _viewTitle() {
+    return Padding(
+        padding: EdgeInsets.only(top: 5),
+        child: Row(children: [
+          Expanded(
+              child: Container(
+                  alignment: Alignment.topCenter, child: Text("NAME"))),
+          Expanded(
+              child: Container(
+                  alignment: Alignment.topCenter, child: Text("USERNAME"))),
+        ]));
   }
 
   void _viewUserAction(UserInfo _user) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => UserInfoScreen(user: _user)));
+  }
+
+  Widget _viewUserButton() {
+    return Padding(
+        padding: EdgeInsets.only(top: 40),
+        child: SingleChildScrollView(
+          child: Table(
+            columnWidths: {
+              0: FixedColumnWidth(_deviceSizeWidth),
+              1: FlexColumnWidth(),
+            },
+            children: _users.map((user) {
+              return TableRow(children: [
+                Container(
+                    color: Colors.blue[50],
+                    padding: EdgeInsets.all(15),
+                    child: TextButton(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(("${user.name}")),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(("${user.username}")),
+                            ),
+                          )
+                        ],
+                      ),
+                      onPressed: () async {
+                        _viewUserAction(user);
+                      },
+                    )),
+              ]);
+            }).toList(),
+            border: TableBorder.all(width: 1, color: Colors.blue),
+          ),
+        ));
   }
 }

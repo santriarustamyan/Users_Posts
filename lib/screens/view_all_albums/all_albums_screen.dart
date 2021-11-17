@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:users_posts_project/class/album_repository.dart';
 import 'package:users_posts_project/model/album/album_info.dart';
 import 'package:users_posts_project/screens/album_info/album_info_screen.dart';
+import 'package:users_posts_project/widgets/table_widget.dart';
 
 class AllAlbumsScreen extends StatefulWidget {
   AllAlbumsScreen({required this.userId});
@@ -12,6 +13,8 @@ class AllAlbumsScreen extends StatefulWidget {
 }
 
 class _AllAlbumsScreenState extends State<AllAlbumsScreen> {
+  double get _deviceSizeWidth => MediaQuery.of(context).size.width;
+
   int? get _userId => widget.userId;
 
   late List<AlbumInfo> album;
@@ -38,12 +41,17 @@ class _AllAlbumsScreenState extends State<AllAlbumsScreen> {
           child: Column(children: [
             for (int i = 0; i < album.length; i++)
               TextButton(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              AlbumInfoScreen(albumId: album[i].id!))),
-                  child: Text("${album[i].title}")),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AlbumInfoScreen(albumId: album[i].id!))),
+                child: TableWidget(
+                  text1: "${i + 1}",
+                  text2: "${album[i].title}",
+                  sizeWidth: _deviceSizeWidth / 5,
+                ),
+              ),
           ]),
         ));
   }
